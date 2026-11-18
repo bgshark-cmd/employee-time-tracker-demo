@@ -25,7 +25,28 @@ const fmtTime=v=>new Date(v).toLocaleString('ru-RU',{dateStyle:'short',timeStyle
 async function loadActive(id,el){const {data,error}=await client.from('ett_intervals').select('kind,started_at').eq('employee_id',id).is('ended_at',null).maybeSingle();if(error){el.textContent='Ошибка статуса: '+error.message;return}if(!data){el.textContent='Статус: остановлен';return}el.textContent='Активно: '+({work:'Работа',lunch:'Обед',break:'Перерыв',personal:'Личные дела',business:'По работе вне офиса',unexplained:'Без объяснения'}[data.kind]||data.kind)+' с '+fmtTime(data.started_at)}
 let busy=false;
 async function transition(id,kind){if(busy)return;busy=true;status('Сохраняем смену статуса в облаке...');try{const fn=kind?'ett_switch_interval':'ett_stop_interval';const args=kind?{p_employee_id:id,p_kind:kind}:{p_employee_id:id};const {error}=await client.rpc(fn,args);if(error)throw error;await check()}catch(e){status('❌ Ошибка таймера: '+e.message+'\\nЕсли функция не найдена, сначала выполни SQL-файл 002_timer_transitions.sql в Supabase.')}finally{busy=false}}
-async function loadJournal(){const root=$('journal');const {data,error}=await client.from('ett_intervals').select('employee_id,kind,started_at,ended_at').order('started_at',{ascending:false}).limit(100);root.replaceChildren();if(error){root.textContent='Ошибка журнала: '+error.message;return}if(!data.length){root.textContent='Интервалов пока нет.';return}for(const item of data){const div=document.createElement('div');div.className='log';const label={work:'Работа',lunch:'Обед',break:'Перерыв',personal:'Личные дела',business:'По работе вне офиса',unexplained:'Без объяснения'}[item.kind]||item.kind;div.textContent=label+' · '+fmtTime(item.started_at)+' → '+(item.ended_at?fmtTime(item.ended_at):'идёт сейчас')+' · сотрудник '+item.employee_id.slice(0,8);root.append(div)}}
+async function loadJournal(){
+ const root=$('journal');
+ const [intervals,employees]=await Promise.all([
+  client.from('ett_intervals').select('employee_id,kind,started_at,ended_at').order('started_at',{ascending:false}).limit(100),
+  client.from('ett_employees').select('id,name')
+ ]);
+ root.replaceChildren();
+ if(intervals.error){root.textContent='Ошибка журнала: '+intervals.error.message;return}
+ if(employees.error){root.textContent='Ошибка загрузки имён сотрудников: '+employees.error.message;return}
+ const names=new Map((employees.data||[]).map(x=>[x.id,x.name]));
+ if(!intervals.data.length){root.textContent='Интервалов пока нет.';return}
+ for(const item of intervals.data){
+  const div=document.createElement('div');div.className='log';
+  const label={work:'Работа',lunch:'Обед',break:'Перерыв',personal:'Личные дела',business:'По работе вне офиса',unexplained:'Без объяснения'}[item.kind]||item.kind;
+  const name=names.get(item.employee_id)||'Неизвестный сотрудник';
+  const duration=item.ended_at?Math.max(0,Math.round((new Date(item.ended_at)-new Date(item.started_at))/60000)):null;
+  const elapsed=duration===null?'активный интервал':Math.floor(duration/60)+' ч '+duration%60+' мин';
+  const heading=document.createElement('strong');heading.textContent=name+' · '+label;
+  const details=document.createElement('div');details.textContent=fmtTime(item.started_at)+' → '+(item.ended_at?fmtTime(item.ended_at):'идёт сейчас')+' · '+elapsed;
+  div.append(heading,details);root.append(div)
+ }
+}
 $('refreshlog').onclick=loadJournal;
 $('test').onclick=check;$('signout').onclick=async()=>{if(client)await client.auth.signOut();show('login');$('password').value='';status('Выход выполнен.')};
 </script></body></html>
