@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Employee Time Tracker v0.3 · Cloud test</title>
+<style>
+:root{font-family:Inter,system-ui,sans-serif;background:#f5f4f1;color:#242424}*{box-sizing:border-box}body{margin:0}main{max-width:760px;margin:35px auto;padding:20px}h1{font-size:26px}section{background:white;border:1px solid #e5e2dc;border-radius:18px;padding:24px;margin:18px 0}label{display:block;margin:16px 0 5px;font-size:14px}input{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font:inherit}button{padding:11px 16px;background:#242424;color:white;border:0;border-radius:10px;font:inherit;cursor:pointer;margin:12px 8px 0 0}button.secondary{background:#eee;color:#222}button:disabled{opacity:.5}.muted{color:#666;font-size:14px}.error{color:#b22}.ok{color:#176f48}.hidden{display:none}li{margin:12px 0}code{word-break:break-all}header{display:flex;align-items:center;justify-content:space-between;gap:12px}small{color:#777}
+</style></head><body><main>
+<header><div><h1>Кто где · облачный тест</h1><small>Employee Time Tracker v0.3 · отдельная проверка Supabase</small></div></header>
+<p class="muted">Это отдельная тестовая страница. Основная версия v0.2 не меняется. Не вводите реальные персональные данные сотрудников.</p>
+<section id="setup"><h2>1. Подключение</h2><p class="muted">Вводите только Project URL и <b>Publishable key</b>. Никогда не вводите secret/service_role key или пароль базы. Эти публичные параметры сохраняются в браузере на данном устройстве.</p>
+<label for="url">Project URL</label><input id="url" placeholder="https://xxxxxxxx.supabase.co" autocomplete="off">
+<label for="key">Publishable key</label><input id="key" placeholder="sb_publishable_..." autocomplete="off">
+<button id="connect">Подключиться</button><p id="setupMsg" role="status"></p></section>
+<section id="login" class="hidden"><h2>2. Вход в аккаунт</h2><p class="muted">Введи email и пароль пользователя, созданного в Authentication → Users. Пароль не сохраняется нашим приложением.</p>
+<form id="loginForm"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required><label for="password">Пароль</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Войти</button></form><p id="loginMsg" role="status"></p></section>
+<section id="data" class="hidden"><h2>3. Проверка облачной базы</h2><p id="account" class="muted"></p><p class="muted">Добавь только вымышленного сотрудника. Затем открой эту страницу на другом устройстве, введи те же публичные параметры и войди в тот же аккаунт.</p>
+<form id="addForm"><label for="name">Имя тестового сотрудника</label><input id="name" maxlength="100" placeholder="Тестовый сотрудник" required><button type="submit">Добавить в облако</button></form>
+<p id="dataMsg" role="status"></p><h3>Сотрудники в базе</h3><ul id="employees"></ul><button class="secondary" id="reload">Обновить список</button><button class="secondary" id="logout">Выйти</button></section>
+<p class="muted">Безопасность: запросы выполняются от имени авторизованного пользователя; таблицы защищены RLS. Не используйте этот тест для реальных кадровых данных.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), configKey='ett_cloud_v03_public_config';let client=null;
+function msg(id,text,error=false){$(id).textContent=text;$(id).className=error?'error':'ok'}
+function show(id){for(const x of ['setup','login','data'])$(x).classList.toggle('hidden',x!==id)}
+function safeError(e){return e?.message||String(e)}
+async function init(url,key){
+ if(!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url)){msg('setupMsg','Проверь Project URL: ожидается адрес https://...supabase.co',true);return}
+ if(!key.startsWith('sb_publishable_')){msg('setupMsg','Нужен Publishable key, начинающийся с sb_publishable_.',true);return}
+ if(!window.supabase){msg('setupMsg','Не удалось загрузить библиотеку Supabase. Проверь подключение к интернету.',true);return}
+ client=window.supabase.createClient(url.replace(/\/$/,''),key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+ localStorage.setItem(configKey,JSON.stringify({url,key}));
+ const {data,error}=await client.auth.getSession();
+ if(error){msg('setupMsg',safeError(error),true);return}
+ if(data.session){show('data');await load()}else show('login');
+}
+$('connect').onclick=()=>init($('url').value.trim(),$('key').value.trim());
+$('loginForm').onsubmit=async e=>{e.preventDefault();const b=e.submitter;b.disabled=true;msg('loginMsg','Проверяем вход...');
+ try{const {error}=await client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});$('password').value='';
+ if(error)throw error;show('data');await load()}catch(err){msg('loginMsg',safeError(err),true)}finally{b.disabled=false}};
+async function load(){
+ const {data:userData,error:userError}=await client.auth.getUser();if(userError||!userData.user){show('login');msg('loginMsg','Сессия истекла. Войди снова.',true);return}
+ $('account').textContent='Аккаунт: '+userData.user.email;
+ const {data,error}=await client.from('ett_employees').select('id,name,archived,created_at').order('created_at',{ascending:true});
+ if(error){msg('dataMsg','Ошибка чтения: '+safeError(error),true);return}
+ $('employees').replaceChildren();
+ for(const person of data){const li=document.createElement('li');li.textContent=person.name+(person.archived?' (архив)':'');$('employees').append(li)}
+ msg('dataMsg','Подключено. Записей: '+data.length);
+}
+$('addForm').onsubmit=async e=>{e.preventDefault();const b=e.submitter;b.disabled=true;
+ try{const {data:userData,error:userError}=await client.auth.getUser();if(userError||!userData.user)throw userError||new Error('Требуется вход');
+ const name=$('name').value.trim();if(!name)throw new Error('Введи имя');
+ const {error}=await client.from('ett_employees').insert({name,owner_id:userData.user.id});if(error)throw error;
+ $('name').value='';await load()}catch(err){msg('dataMsg','Ошибка записи: '+safeError(err),true)}finally{b.disabled=false}};
+$('reload').onclick=load;
+$('logout').onclick=async()=>{await client.auth.signOut();show('login');msg('loginMsg','Выход выполнен.')};
+try{const c=JSON.parse(localStorage.getItem(configKey)||'null');if(c?.url&&c?.key){$('url').value=c.url;$('key').value=c.key;init(c.url,c.key)}}catch{}
+})();
+</script></body></html>
