@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Employee Time Tracker · v1.3</title>
+<style>:root{font-family:system-ui,Arial,sans-serif;color:#202321;background:#f6f7f5}*{box-sizing:border-box}main{max-width:560px;margin:42px auto;padding:20px}.card{background:#fff;border:1px solid #dfe4df;border-radius:18px;padding:24px}h1{font-size:24px}p{line-height:1.5;color:#526057}label{display:block;margin:16px 0 5px;font-size:14px;font-weight:600}input{display:block;width:100%;padding:12px;border:1px solid #bdc8be;border-radius:9px;font-size:16px}button{background:#1b6246;color:#fff;border:0;border-radius:9px;padding:12px 18px;margin-top:18px;cursor:pointer;font-size:15px}button.secondary{background:#e9eeea;color:#203c2c;margin-left:8px}button:disabled{opacity:.6}#status{white-space:pre-wrap;background:#f0f5f1;border-radius:10px;padding:12px;margin-top:18px;font-size:14px;line-height:1.6}.warn{font-size:13px}a{color:#176543} .employee{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e5eae5;flex-wrap:wrap}.employee small{color:#69766e}.employee button{margin:2px;padding:8px 10px;font-size:13px}.muted{color:#67766c}#employees{margin-top:16px}#addname{margin-top:8px}  .timerrow{border:1px solid #e4e9e4;border-radius:12px;padding:12px;margin:12px 0}.timerbuttons{display:flex;gap:6px;flex-wrap:wrap}.timerbuttons button{margin:3px 0;padding:8px 10px;font-size:13px}.timerbuttons button.selected{background:#174c37;color:#fff}.log{font-size:13px;line-height:1.7;border-bottom:1px solid #e4e9e4;padding:7px 0}  .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.filters select,.filters input{width:100%;padding:10px;border:1px solid #bdc8be;border-radius:9px;background:white}.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}.metric{border:1px solid #dfe4df;border-radius:10px;padding:12px}.metric strong{display:block;font-size:22px}.metric span{font-size:12px;color:#526057}.timeline{display:flex;height:24px;border-radius:7px;overflow:hidden;background:#eef0ed;margin:12px 0}.timeline div{min-width:0}.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px}.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}.panel{padding:15px 0;border-bottom:1px solid #dfe4df} main{max-width:1240px;margin:20px auto;padding:20px}.card{padding:28px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.topbar h2{font-size:29px;margin:5px 0}.eyebrow{font-size:11px;font-weight:750;letter-spacing:.13em;color:#64796d}.navigation{display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid #e2e8e2;margin:22px 0 26px;padding-bottom:8px}.navigation button{white-space:nowrap;margin:0;background:transparent;color:#607168;font-weight:650;padding:11px 16px;border-radius:9px}.navigation button.active{background:#e6f1e9;color:#155a3c}.page[hidden]{display:none!important}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.kpi{border:1px solid #e1e8e1;background:#fafcfb;border-radius:14px;padding:17px}.kpi b{display:block;font-size:32px;margin:5px 0;color:#173f2d}.kpi span{font-size:13px;color:#5b6b61}.dashboard-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}.dash-card{border:1px solid #e1e8e1;border-radius:14px;padding:18px}.dash-card h3{margin-top:0}.person-line{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #edf0ed;padding:12px 0}.pill{font-size:12px;border-radius:99px;padding:5px 9px;background:#edf0ed;color:#3d5144}.mix-line{display:flex;justify-content:space-between;gap:12px;margin:9px 0;font-size:13px}.mix-bar{height:12px;border-radius:99px;overflow:hidden;background:#edf0ed;display:flex}.mix-bar div{height:100%}@media(max-width:800px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-grid{grid-template-columns:1fr}.card{padding:16px}main{padding:10px}.navigation button{padding:10px 12px}} .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.period-section{margin-top:35px;border-top:1px solid #e4e9e4;padding-top:20px}.period-controls{display:flex;gap:6px}.period-controls button{margin:0}.period-controls button.active{background:#164d36;color:white}.period-people{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.person-card{border:1px solid #e0e8e1;border-radius:12px;padding:16px;background:#fff}.person-card h4{margin:0 0 12px}.person-card .line{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin:8px 0}.person-card .bar{height:9px;border-radius:9px;display:flex;overflow:hidden;background:#e8eee9;margin:12px 0}.person-card .bar span{height:100%}.person-card .muted{font-size:12px} .attention-card{margin:18px 0 22px;border:1px solid #e7d8bb;background:#fffdf9;border-radius:14px;padding:18px}.attention-card h3{margin:6px 0 12px}.attention-row{display:flex;justify-content:space-between;gap:14px;align-items:center;border-top:1px solid #f0e9dc;padding:12px 0}.attention-row strong{display:block}.attention-row small{display:block;color:#68766c;margin-top:5px}.attention-min{white-space:nowrap;font-weight:700;color:#9c5926}.attention-ok{color:#557265;font-size:14px;padding:10px 0}.attention-card .pill{background:#f8e8cf;color:#845624} .profile{margin:30px 0;padding:22px;border:1px solid #d4e2d7;border-radius:16px;background:#fbfdfb}.profile[hidden]{display:none}.profile .period-controls{margin:15px 0}.profile-days{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px;margin:12px 0 25px}.profile-day{border:1px solid #e1e8e1;border-radius:10px;padding:10px;background:white}.profile-day strong{display:block;font-size:12px}.profile-day span{display:block;font-size:12px;color:#65766b;margin-top:5px}.profile-day .day-bar{height:7px;background:#e9eee9;display:flex;border-radius:6px;overflow:hidden;margin-top:8px}.profile-day .day-bar i{display:block;height:100%}.profile .log{background:#fff;padding:10px}.profile .period-controls button{margin:0} .schedule-card{margin:16px 0}.schedule-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px}.schedule-day{border:1px solid #e2e9e2;border-radius:10px;padding:12px}.schedule-day label{margin:5px 0;font-size:12px}.schedule-day input[type=checkbox]{display:inline;width:auto;margin-right:7px}.schedule-day input[type=time],.schedule-day input[type=number]{padding:8px;font-size:13px}.pf-row{display:grid;grid-template-columns:95px 1fr 1fr 1fr;gap:8px;padding:8px 0;border-bottom:1px solid #e5eae5;font-size:13px}.pf-row.head{font-weight:700}.pf-row .negative{color:#ad5737}.pf-row .positive{color:#207d4d}@media(max-width:600px){.pf-row{grid-template-columns:70px 1fr 1fr 1fr;font-size:11px}} .override-toggle{display:flex;align-items:center;gap:9px;margin:16px 0;font-weight:650}.override-toggle input{width:auto;margin:0}.schedule-card #scheduleEditor[hidden]{display:none}.schedule-card #scheduleEditor>button{margin-top:15px} .action-panel{margin:20px 0}.activity-person{padding:15px 0;border-top:1px solid #e5ebe6}.activity-person:first-child{border-top:0}.activity-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px}.activity-head strong{font-size:16px}.activity-actions{display:flex;gap:7px;flex-wrap:wrap}.activity-actions button{margin:0;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid transparent;transition:box-shadow .15s}.activity-actions button[data-kind=work]{background:#e2f3e9;color:#176c43;border-color:#b3dec5}.activity-actions button[data-kind=lunch]{background:#fff2d5;color:#875800;border-color:#efd79b}.activity-actions button[data-kind=break]{background:#ffeadf;color:#a24829;border-color:#f3c3ae}.activity-actions button[data-kind=personal]{background:#f0e9fa;color:#6b4399;border-color:#d8c5ee}.activity-actions button[data-kind=business]{background:#e4f0fb;color:#246a9b;border-color:#b7d7ef}.activity-actions button[data-kind=unexplained]{background:#ebedf0;color:#555d69;border-color:#d1d6de}.activity-actions button[data-kind=stop]{background:#fff;color:#616b66;border:1px solid #dce3de}.activity-actions button.is-current{box-shadow:0 0 0 2px currentColor inset}.activity-actions button:disabled{opacity:.5;cursor:wait}.activity-status{font-size:12px;border-radius:99px;padding:6px 11px;background:#eef1ee;color:#485e50}.activity-status[data-kind=work]{background:#e2f3e9;color:#176c43}.activity-status[data-kind=lunch]{background:#fff2d5;color:#875800}.activity-status[data-kind=break]{background:#ffeadf;color:#a24829}.activity-status[data-kind=personal]{background:#f0e9fa;color:#6b4399}.activity-status[data-kind=business]{background:#e4f0fb;color:#246a9b}.activity-status[data-kind=unexplained]{background:#ebedf0;color:#555d69}@media(max-width:650px){.activity-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.activity-actions button{min-height:42px}} 
+#clearActivityDialog{width:min(34rem,calc(100% - 2rem));max-height:90vh;overflow:auto;color:#e9eef8;background:#101827;border:1px solid #526179;border-radius:16px;padding:24px}
+#clearActivityDialog::backdrop{background:#070c16bd}
+#clearActivityDialog [hidden]{display:none}
+#clearActivityDialog menu{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin-bottom:0}
+#clearActivityStart,#clearActivitySubmit{background:#a12841;color:#fff}
+#clearActivityStart:disabled,#clearActivitySubmit:disabled{opacity:.55;cursor:not-allowed}
+</style></head>
+<body><main><h1>Employee Time Tracker <small style="font-size:.4em;font-weight:500;opacity:.6;vertical-align:middle">v1.3</small></h1><div class="card">
+<section id="config"><h2>1. Подключение</h2><label for="url">Project URL / API URL</label><input id="url" type="url" autocomplete="off" placeholder="https://xxxxxxxx.supabase.co"><label for="key">Publishable key</label><input id="key" type="text" autocomplete="off" spellcheck="false" placeholder="sb_publishable_..."><button id="connect">Продолжить</button><p class="warn">Вводи только Publishable key. Никогда не вводи service_role, secret key или пароль базы данных.</p></section>
+<section id="login" hidden><h2>2. Вход в аккаунт</h2><label for="email">Email пользователя Employee Time Tracker</label><input id="email" type="email" autocomplete="username"><label for="password">Пароль этого пользователя</label><input id="password" type="password" autocomplete="current-password"><button id="signin">Войти и проверить таблицы</button><button class="secondary" id="change">Изменить подключение</button></section>
+<section id="ready" hidden><div class="topbar"><div><div class="eyebrow">EMPLOYEE TIME TRACKER / CLOUD</div><h2 id="pageTitle">Обзор команды</h2><p id="identity"></p></div><button id="test" class="secondary">↻ Обновить</button></div>
+<nav class="navigation" aria-label="Основные разделы"><button class="nav active" data-page="overview">Обзор</button><button class="nav" data-page="team">Команда</button><button class="nav" data-page="analytics">Аналитика</button><button class="nav" data-page="journal">Журнал</button><button class="nav" data-page="settings">Настройки</button></nav>
+<div id="page-overview" class="page"><div class="eyebrow">ОПЕРАЦИОННАЯ СВОДКА</div><p class="muted">Текущие статусы по данным облака. Пустой статус не означает отсутствие сотрудника.</p><div id="overviewKpis" class="kpis"></div><div class="attention-card"><div class="section-head"><div><div class="eyebrow">ТРЕБУЕТ ПРОВЕРКИ</div><h3>Отклонения по зарегистрированным перерывам</h3></div><span id="attentionCount" class="pill">Проверяем...</span></div><div id="attentionList"></div><p class="warn">Это сигналы для уточнения, а не доказательства нарушения. Учитываются только интервалы, которые сотрудники зарегистрировали.</p></div><div class="dash-card action-panel"><div class="section-head"><div><div class="eyebrow">БЫСТРЫЕ ДЕЙСТВИЯ</div><h3>Активность сотрудников</h3><p class="muted">Измени статус прямо с главной. Выбранная активность выделяется цветом.</p></div><button class="secondary" id="refreshActivity" type="button">↻ Обновить</button></div><div id="quickActivity"></div></div><div class="dashboard-grid"><div class="dash-card"><h3>Сейчас в команде</h3><div id="overviewPeople"></div></div><div class="dash-card"><h3>Структура зарегистрированного времени сегодня</h3><div id="overviewMix"></div></div></div><p class="warn">Сводка обновляется по кнопке «Обновить», не автоматически.</p></div>
+<div id="page-team" class="page" hidden><div class="section-head"><h3>Сотрудники и таймеры</h3><button id="refreshTeam" class="secondary" type="button">↻ Обновить команду</button></div><h2>Сотрудники в облаке</h2><p class="warn">Только вымышленные тестовые имена. Данные записываются в Supabase.</p><label for="addname">Имя тестового сотрудника</label><input id="addname" maxlength="100" placeholder="Например, Тестовый сотрудник 1"><button id="add">Добавить в облако</button><div id="employees"></div><section id="employeeProfile" class="profile" hidden><div class="section-head"><div><div class="eyebrow">КАРТОЧКА СОТРУДНИКА</div><h2 id="profileName"></h2><p id="profileStatus" class="muted"></p></div><button id="closeProfile" class="secondary">Закрыть карточку</button></div><div class="period-controls"><button id="profile7" class="period active">7 дней</button><button id="profile30" class="period">30 дней</button></div><div class="dash-card schedule-card"><div class="section-head"><div><h3>Рабочий график</h3><p id="scheduleSource" class="muted">По умолчанию действует общий график компании.</p></div></div><label class="override-toggle"><input type="checkbox" id="scheduleOverride"> Использовать индивидуальный график для этого сотрудника</label><div id="scheduleEditor" hidden><p class="muted">Индивидуальное исключение. Можно изменить любой день недели.</p><div id="scheduleGrid" class="schedule-grid"></div><button id="saveSchedule">Сохранить индивидуальный график</button></div><p id="scheduleMessage" class="muted"></p></div><div id="planFact" class="dash-card"><h3>План / факт за период</h3><div id="planFactKpis" class="kpis"></div><div id="planFactDays"></div><p class="warn">Факт = зарегистрированные интервалы «Работа». Отсутствие записи не доказывает отсутствие сотрудника. План и факт сопоставляются в часовом поясе устройства.</p></div><div id="profileKpis" class="kpis"></div><div class="dashboard-grid"><div class="dash-card"><h3>Структура времени</h3><div id="profileMix"></div></div><div class="dash-card"><h3>Сигналы, требующие проверки</h3><div id="profileAlerts"></div></div></div><h3>Динамика по дням</h3><div id="profileDays" class="profile-days"></div><h3>Последние интервалы</h3><div id="profileHistory"></div><p class="warn">Данные отражают только зарегистрированные интервалы. Сигналы не являются подтверждёнными нарушениями. Пороги берутся из настроек этого браузера.</p></section></div><div id="page-analytics" class="page" hidden><h3>Аналитика рабочего дня</h3><div class="filters"><div><label for="filterEmployee">Сотрудник</label><select id="filterEmployee"><option value="">Все сотрудники</option></select></div><div><label for="filterDate">Дата</label><input type="date" id="filterDate"></div><div><label for="filterKind">Активность</label><select id="filterKind"><option value="">Все активности</option><option value="work">Работа</option><option value="lunch">Обед</option><option value="break">Перерыв</option><option value="personal">Личные дела</option><option value="business">По работе вне офиса</option><option value="unexplained">Без объяснения</option></select></div></div><div id="dayAnalytics"></div><div class="period-section"><div class="section-head"><div><h3>Динамика команды</h3><p class="muted">Зарегистрированные интервалы за последние 7 или 30 календарных дней.</p></div><div class="period-controls"><button id="period7" class="period active" type="button">7 дней</button><button id="period30" class="period" type="button">30 дней</button></div></div><div id="periodSummary" class="kpis"></div><div id="periodEmployees" class="period-people"></div><p class="warn">Это аналитика зарегистрированных статусов, а не оценка продуктивности. Дни без записей не считаются отсутствием.</p></div></div><div id="page-journal" class="page" hidden><h3>Журнал интервалов</h3><p class="muted">Используются фильтры сотрудника, даты и активности из раздела «Аналитика».</p><p class="warn">Время хранится в UTC, отображается в часовом поясе устройства. Журнал показывает до 1000 последних интервалов, подходящих под фильтры. Интервалы, пересекающие границы дня, учитываются только в пределах выбранной даты.</p><button id="refreshlog">Обновить журнал</button><div id="journal"></div></div><div id="page-settings" class="page" hidden><h3>Настройки</h3><div class="dash-card schedule-card"><div class="section-head"><div><h3>Общий график компании</h3><p class="muted">Применяется ко всем сотрудникам без индивидуального исключения.</p></div><button id="saveCompanySchedule">Сохранить общий график</button></div><p id="companyScheduleMessage" class="muted"></p><div id="companyScheduleGrid" class="schedule-grid"></div></div><div class="dash-card"><h3>Порог внимания к перерывам</h3><p class="muted">Обед и другие перерывы проверяются отдельно. Значения сохраняются в браузере этого устройства, не в облаке.</p><div class="filters"><div><label for="limitBreak">Перерыв, минут</label><input id="limitBreak" type="number" min="1" max="480" value="30"></div><div><label for="limitLunch">Обед, минут</label><input id="limitLunch" type="number" min="1" max="480" value="60"></div></div><button id="saveLimits">Сохранить пороги</button><p id="limitsStatus" class="muted"></p></div>
+<section class="dash-card" aria-labelledby="dataManagementTitle">
+  <h3 id="dataManagementTitle">Управление данными</h3>
+  <p class="muted">Очистка удаляет историю активности этого аккаунта за всё время, включая запущенные таймеры. Сотрудники, графики и настройки сохраняются.</p>
+  <button type="button" id="clearActivityStart">Очистить историю активности</button>
+  <p id="clearActivityStatus" role="status" class="muted"></p>
+</section>
+<dialog id="clearActivityDialog" aria-labelledby="clearActivityTitle">
+  <h3 id="clearActivityTitle">Очистить историю активности</h3>
+  <p role="status" id="clearActivityCount"></p>
+  <p id="clearActivityWarning" class="warn" hidden>Удаление необратимо. Запущенные таймеры тоже будут удалены.</p>
+  <section id="clearActivityConfirm" hidden>
+    <label for="clearActivityWord">Введите слово <strong>ОЧИСТИТЬ</strong></label>
+    <input id="clearActivityWord" type="text" autocomplete="off" spellcheck="false">
+  </section>
+  <menu>
+    <button type="button" class="secondary" id="clearActivityCancel" autofocus>Отмена</button>
+    <button type="button" id="clearActivityContinue" hidden>Продолжить</button>
+    <button type="button" id="clearActivitySubmit" disabled hidden>Удалить записи</button>
+  </menu>
+</dialog>
+<p>Подключение: Supabase Cloud</p><p class="warn">Для изменения Project URL и Publishable key выйди из приложения и открой страницу заново. Реальные данные сотрудников пока не загружай.</p><button class="secondary" id="signout">Выйти из аккаунта</button><p class="muted">Версия v1.3 · Данные сохраняются в той же базе, что и v0.5.</p></div></section>
+<div id="status" role="status" aria-live="polite">Ожидаем подключения.</div></div><p class="warn">Для теста используй только свой аккаунт. Не вводи реальные данные сотрудников. Параметры проекта сохраняются в этом браузере; вход Supabase также может сохранять сессию на устройстве. Не используй страницу на чужом компьютере.</p></main>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const $=id=>document.getElementById(id), store='ett_supabase_test_config_v1';let client=null;
+function status(s){$('status').textContent=s}
+function show(id){for(const s of ['config','login','ready'])$(s).hidden=s!==id}
+function validUrl(s){try{const u=new URL(s);return u.protocol==='https:'&&/^[a-z0-9-]+\.supabase\.co$/i.test(u.hostname)&&u.pathname==='/' }catch{return false}}
+function setup(url,key){client=createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}})}
+const prior=JSON.parse(localStorage.getItem(store)||'null');if(prior){$('url').value=prior.url||'';$('key').value=prior.key||''}
+$('connect').onclick=async()=>{const url=$('url').value.trim().replace(/\/rest\/v1\/?$/i,'').replace(/\/$/,'')+'/',key=$('key').value.trim();if(!validUrl(url)){status('Неверный Project URL. Нужен именно API URL вида https://идентификатор.supabase.co (не адрес dashboard).');return}if(!key || /\s/.test(key)){status('Вставь API key без пробелов и переносов строк. Подходит Publishable key (sb_publishable_...) или старый публичный anon key. Секретные ключи не используй.');return}if(key.startsWith('sb_secret_') || key.startsWith('sb_service_')){status('Это секретный ключ. Нужен публичный Publishable key или anon key.');return}try{setup(url,key);localStorage.setItem(store,JSON.stringify({url,key}));const {data,error}=await client.auth.getUser();if(error||!data.user){show('login');status('Подключение настроено. Войди под созданным пользователем.')}else{show('ready');$('identity').textContent='Вход: '+(data.user.email||'пользователь');await check()}}catch(e){status('Не удалось инициализировать подключение: '+e.message)}};
+$('change').onclick=()=>{show('config');status('Можно изменить адрес и ключ.')};
+$('signin').onclick=async()=>{if(!client)return;const email=$('email').value.trim(),password=$('password').value;if(!email||!password){status('Введи email и пароль пользователя.');return}status('Проверяем вход...');$('signin').disabled=true;try{const {data,error}=await client.auth.signInWithPassword({email,password});$('password').value='';if(error)throw error;show('ready');$('identity').textContent='Вход: '+(data.user.email||'пользователь');await check()}catch(e){status('Ошибка входа: '+e.message)}finally{$('signin').disabled=false}};
+let refreshPending=Promise.resolve();
+function check(){
+ refreshPending=refreshPending.then(refreshViews);
+ return refreshPending;
+}
+async function refreshViews(){status('Читаем список сотрудников из Supabase...');try{const {data,error}=await client.from('ett_employees').select('id,name,archived,created_at').order('created_at',{ascending:true});if(error)throw error;renderEmployees(data);populateEmployeeFilter(data);await Promise.all([loadJournal(),loadOverview(data),loadPeriodAnalytics(),loadAttention(data)]);if(selectedProfileId)await loadProfile();status('✅ Подключено. Сотрудников в облаке: '+data.length+' (активных: '+data.filter(x=>!x.archived).length+').')}catch(e){status('❌ Ошибка чтения: '+e.message)}}
+function renderEmployees(items){const root=$('employees');root.replaceChildren();if(!items.length){const p=document.createElement('p');p.className='muted';p.textContent='Пока нет сотрудников. Добавь вымышленное имя для проверки.';root.append(p);return}for(const item of items){const row=document.createElement('div');row.className='employee';const name=document.createElement('span');name.textContent=item.name+(item.archived?' (архив)':'');const actions=document.createElement('div');const rename=document.createElement('button');rename.className='secondary';rename.textContent='Переименовать';rename.onclick=async()=>{const value=prompt('Новое имя сотрудника:',item.name);if(value===null)return;const n=value.trim();if(!n||n.length>100){status('Имя должно содержать от 1 до 100 символов.');return}const {error}=await client.from('ett_employees').update({name:n}).eq('id',item.id);if(error)status('Ошибка переименования: '+error.message);else await check()};const archive=document.createElement('button');archive.className='secondary';archive.textContent=item.archived?'Восстановить':'В архив';archive.onclick=async()=>{const {error}=await client.from('ett_employees').update({archived:!item.archived}).eq('id',item.id);if(error)status('Ошибка архивации: '+error.message);else await check()};const profile=document.createElement('button');profile.textContent='Карточка';profile.onclick=()=>openProfile(item.id);actions.append(profile,rename,archive);row.append(name,actions);root.append(row);if(!item.archived){const timer=document.createElement('div');timer.className='timerrow';const current=document.createElement('div');current.className='muted';current.textContent='Загружаем статус...';timer.append(current);const buttons=document.createElement('div');buttons.className='timerbuttons';const kinds={work:'Работа',lunch:'Обед',break:'Перерыв',personal:'Личные дела',business:'По работе вне офиса',unexplained:'Без объяснения'};for(const [kind,label] of Object.entries(kinds)){const b=document.createElement('button');b.textContent=label;b.onclick=()=>transition(item.id,kind);buttons.append(b)}const stop=document.createElement('button');stop.className='secondary';stop.textContent='Остановить';stop.onclick=()=>transition(item.id,null);buttons.append(stop);timer.append(buttons);row.after(timer);loadActive(item.id,current)}}}
+$('add').onclick=async()=>{if(!client)return;const name=$('addname').value.trim();if(!name||name.length>100){status('Введите имя от 1 до 100 символов.');return}const button=$('add');button.disabled=true;try{const {data:{user},error:authError}=await client.auth.getUser();if(authError||!user)throw Error('Сессия истекла. Войди заново.');const {error}=await client.from('ett_employees').insert({name,owner_id:user.id});if(error)throw error;$('addname').value='';await check()}catch(e){status('❌ Ошибка записи: '+e.message)}finally{button.disabled=false}};
+const fmtTime=v=>new Date(v).toLocaleString('ru-RU',{dateStyle:'short',timeStyle:'medium'});
+async function loadActive(id,el){const {data,error}=await client.from('ett_intervals').select('kind,started_at').eq('employee_id',id).is('ended_at',null).maybeSingle();if(error){el.textContent='Ошибка статуса: '+error.message;return}if(!data){el.textContent='Статус: остановлен';return}el.textContent='Активно: '+({work:'Работа',lunch:'Обед',break:'Перерыв',personal:'Личные дела',business:'По работе вне офиса',unexplained:'Без объяснения'}[data.kind]||data.kind)+' с '+fmtTime(data.started_at)}
+let busy=false;
+async function transition(id,kind){if(busy||clearActivityDialog.open)return;busy=true;status('Сохраняем смену статуса в облаке...');try{const fn=kind?'ett_switch_interval':'ett_stop_interval';const args=kind?{p_employee_id:id,p_kind:kind}:{p_employee_id:id};const {error}=await client.rpc(fn,args);if(error)throw error;await check()}catch(e){status('❌ Ошибка таймера: '+e.message+'\\nЕсли функция не найдена, сначала выполни SQL-файл 002_timer_transitions.sql в Supabase.')}finally{busy=false}}
+const kinds={work:'Работа',lunch:'Обед',break:'Перерыв',personal:'Личные дела',business:'По работе вне офиса',unexplained:'Без объяснения'};
+const colors={work:'#238657',lunch:'#f0b44a',break:'#e07856',personal:'#8d78c8',business:'#4a90c3',unexplained:'#b5b5b5'};
+const dayInput=$('filterDate');dayInput.value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+let knownEmployees=[];
+function populateEmployeeFilter(data){knownEmployees=data;const sel=$('filterEmployee'),prev=sel.value;sel.replaceChildren();const all=document.createElement('option');all.value='';all.textContent='Все сотрудники';sel.append(all);for(const emp of data){const opt=document.createElement('option');opt.value=emp.id;opt.textContent=emp.name;sel.append(opt)}sel.value=prev}
+function mins(v){return Math.round(v/60000)}
+function durationLabel(ms){const m=Math.max(0,mins(ms));return Math.floor(m/60)+' ч '+m%60+' мин'}
+function bounds(date){const start=new Date(date+'T00:00:00');const end=new Date(start);end.setDate(end.getDate()+1);return [start,end]}
+function renderAnalytics(rows,date,employeeId,kind){
+ const root=$('dayAnalytics');root.replaceChildren();
+ const [start,end]=bounds(date),now=new Date(),endCap=now<end?now:end;
+ const relevant=rows.filter(x=>(!employeeId||x.employee_id===employeeId)&&(!kind||x.kind===kind));
+ const totals=Object.fromEntries(Object.keys(kinds).map(k=>[k,0]));
+ const parts=[];
+ for(const x of relevant){const a=Math.max(start.getTime(),new Date(x.started_at).getTime()),b=Math.min(endCap.getTime(),x.ended_at?new Date(x.ended_at).getTime():now.getTime());if(b>a){totals[x.kind]+=b-a;parts.push({a,b,kind:x.kind})}}
+ const heading=document.createElement('p');heading.textContent=employeeId?'Сотрудник: '+(knownEmployees.find(e=>e.id===employeeId)?.name||'не найден'):'Все сотрудники (суммарное время)';root.append(heading);
+ const summary=document.createElement('div');summary.className='summary';
+ for(const [k,v] of Object.entries(totals)){if(kind&&kind!==k)continue;const card=document.createElement('div');card.className='metric';const val=document.createElement('strong');val.textContent=durationLabel(v);const lbl=document.createElement('span');lbl.textContent=kinds[k];card.append(val,lbl);summary.append(card)}root.append(summary);
+ const caption=document.createElement('p');caption.className='warn';caption.textContent='Учитываются только зарегистрированные интервалы. Незарегистрированное время не считается отсутствием. Незавершённые интервалы учитываются до текущего момента.';root.append(caption);
+ if(!employeeId){const msg=document.createElement('p');msg.className='muted';msg.textContent='Для шкалы одного рабочего дня выбери сотрудника.';root.append(msg);return}
+ const label=document.createElement('strong');label.textContent='Шкала дня · 00:00–24:00';root.append(label);
+ const bar=document.createElement('div');bar.className='timeline';bar.setAttribute('aria-label','Временная шкала активностей за день');
+ parts.sort((a,b)=>a.a-b.a);
+ let cursor=start.getTime();for(const p of parts){const a=Math.max(cursor,p.a);if(a>cursor){const gap=document.createElement('div');gap.style.flex=(a-cursor)+' 0 0';bar.append(gap)}if(p.b>a){const seg=document.createElement('div');seg.style.flex=(p.b-a)+' 0 0';seg.style.background=colors[p.kind];seg.title=kinds[p.kind]+' · '+new Date(a).toLocaleTimeString('ru-RU')+'–'+new Date(p.b).toLocaleTimeString('ru-RU');bar.append(seg);cursor=p.b}}
+ if(cursor<end.getTime()){const gap=document.createElement('div');gap.style.flex=(end.getTime()-cursor)+' 0 0';bar.append(gap)}
+ root.append(bar);
+ const legend=document.createElement('div');legend.className='legend';for(const [k,name] of Object.entries(kinds)){const item=document.createElement('span');const swatch=document.createElement('i');swatch.style.background=colors[k];item.append(swatch,document.createTextNode(name));legend.append(item)}root.append(legend);
+}
+let journalRequest=0;
+async function loadJournal(){
+ const token=++journalRequest;
+ const root=$('journal'),employeeId=$('filterEmployee').value,kind=$('filterKind').value,date=dayInput.value;
+ if(!date){root.textContent='Выбери дату';return}
+ const [start,end]=bounds(date);
+ let q=client.from('ett_intervals').select('employee_id,kind,started_at,ended_at').lt('started_at',end.toISOString()).or('ended_at.is.null,ended_at.gt.'+start.toISOString()).order('started_at',{ascending:false}).limit(1000);
+ if(employeeId)q=q.eq('employee_id',employeeId);
+ if(kind)q=q.eq('kind',kind);
+ const {data,error}=await q;if(token!==journalRequest)return;root.replaceChildren();
+ if(error){root.textContent='Ошибка журнала: '+error.message;$('dayAnalytics').replaceChildren();return}
+ renderAnalytics(data,date,employeeId,kind);
+ const names=new Map(knownEmployees.map(x=>[x.id,x.name]));
+ if(!data.length){root.textContent='За выбранную дату записей нет.';return}
+ for(const item of data){
+  const div=document.createElement('div');div.className='log';
+  const heading=document.createElement('strong');heading.textContent=(names.get(item.employee_id)||'Неизвестный сотрудник')+' · '+(kinds[item.kind]||item.kind);
+  const details=document.createElement('div');details.textContent=fmtTime(item.started_at)+' → '+(item.ended_at?fmtTime(item.ended_at):'идёт сейчас')+' · '+(item.ended_at?durationLabel(new Date(item.ended_at)-new Date(item.started_at)):'активный интервал');
+  div.append(heading,details);root.append(div)
+ }
+ if(data.length===1000){const note=document.createElement('p');note.textContent='Показаны первые 1000 записей. Для полного отчёта понадобится постраничная загрузка.';root.append(note)}
+}
+for(const id of ['filterEmployee','filterDate','filterKind'])$(id).addEventListener('change',loadJournal);
+let periodDays=7,periodRequest=0;
+async function loadPeriodAnalytics(){
+ const token=++periodRequest,summary=$('periodSummary'),people=$('periodEmployees');
+ summary.textContent='Загружаем статистику...';people.replaceChildren();
+ const end=new Date(),start=new Date(end.getFullYear(),end.getMonth(),end.getDate()-periodDays+1);
+ const {data,error}=await client.from('ett_intervals').select('employee_id,kind,started_at,ended_at').lt('started_at',end.toISOString()).or('ended_at.is.null,ended_at.gt.'+start.toISOString()).order('started_at',{ascending:false}).limit(1000);
+ if(token!==periodRequest)return;
+ summary.replaceChildren();
+ if(error){summary.textContent='Ошибка статистики: '+error.message;return}
+ const ids=new Set(knownEmployees.filter(e=>!e.archived).map(e=>e.id));
+ const byEmployee=new Map();let work=0,breaks=0,other=0;
+ for(const x of data){
+  if(!ids.has(x.employee_id))continue;
+  const a=Math.max(start.getTime(),new Date(x.started_at).getTime()),b=Math.min(end.getTime(),x.ended_at?new Date(x.ended_at).getTime():end.getTime());
+  if(b<=a)continue;
+  const ms=b-a;const v=byEmployee.get(x.employee_id)||{work:0,breaks:0,other:0,count:0};
+  if(x.kind==='work'){work+=ms;v.work+=ms}
+  else if(x.kind==='lunch'||x.kind==='break'){breaks+=ms;v.breaks+=ms}
+  else{other+=ms;v.other+=ms}
+  v.count++;byEmployee.set(x.employee_id,v);
+ }
+ summary.append(makeMetric('Зарегистрированная работа',durationLabel(work)),makeMetric('Обед и перерывы',durationLabel(breaks)),makeMetric('Другие активности',durationLabel(other)),makeMetric('Сотрудников с записями',String(byEmployee.size)));
+ for(const e of knownEmployees.filter(e=>!e.archived)){
+  const v=byEmployee.get(e.id)||{work:0,breaks:0,other:0,count:0},total=v.work+v.breaks+v.other;
+  const card=document.createElement('div');card.className='person-card';
+  const h=document.createElement('h4');h.textContent=e.name;card.append(h);
+  const bar=document.createElement('div');bar.className='bar';
+  for(const [value,color] of [[v.work,'#238657'],[v.breaks,'#f0b44a'],[v.other,'#8d78c8']]){
+   if(!value)continue;const seg=document.createElement('span');seg.style.width=(value/total*100)+'%';seg.style.background=color;bar.append(seg)
+  }
+  card.append(bar);
+  for(const [label,value] of [['Работа',v.work],['Обед и перерывы',v.breaks],['Другие активности',v.other]]){
+   const line=document.createElement('div');line.className='line';const left=document.createElement('span');left.textContent=label;const right=document.createElement('strong');right.textContent=durationLabel(value);line.append(left,right);card.append(line)
+  }
+  const note=document.createElement('p');note.className='muted';note.textContent='Зарегистрировано интервалов: '+v.count;card.append(note);people.append(card)
+ }
+ if(data.length===1000){const warning=document.createElement('p');warning.className='warn';warning.textContent='Внимание: достигнут лимит 1000 записей, показатели могут быть неполными.';people.prepend(warning)}
+}
+for(const n of [7,30])$('period'+n).addEventListener('click',()=>{periodDays=n;for(const k of [7,30])$('period'+k).classList.toggle('active',k===n);if(client)loadPeriodAnalytics()});
+const limitsKey='ett_attention_limits_v1';
+function readLimits(){try{const saved=JSON.parse(localStorage.getItem(limitsKey)||'{}');return {break:validLimit(saved.break,30),lunch:validLimit(saved.lunch,60)}}catch{return {break:30,lunch:60}}}
+function validLimit(v,fallback){const n=Number(v);return Number.isInteger(n)&&n>=1&&n<=480?n:fallback}
+const initialLimits=readLimits();$('limitBreak').value=initialLimits.break;$('limitLunch').value=initialLimits.lunch;
+$('saveLimits').onclick=()=>{const b=Number($('limitBreak').value),l=Number($('limitLunch').value);if(!Number.isInteger(b)||b<1||b>480||!Number.isInteger(l)||l<1||l>480){$('limitsStatus').textContent='Введите целые значения от 1 до 480 минут.';return}localStorage.setItem(limitsKey,JSON.stringify({break:b,lunch:l}));$('limitsStatus').textContent='Пороги сохранены на этом устройстве.';if(client&&knownEmployees.length)loadAttention(knownEmployees)};
+async function loadAttention(employees){
+ const root=$('attentionList'),count=$('attentionCount');root.textContent='Загружаем интервалы...';count.textContent='Проверяем...';
+ const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),now.getDate()),end=new Date(start);end.setDate(end.getDate()+1);
+ const {data,error}=await client.from('ett_intervals').select('employee_id,kind,started_at,ended_at').in('kind',['break','lunch']).lt('started_at',end.toISOString()).or('ended_at.is.null,ended_at.gt.'+start.toISOString()).order('started_at',{ascending:false}).limit(1000);
+ root.replaceChildren();if(error){root.textContent='Ошибка загрузки: '+error.message;count.textContent='Ошибка';return}
+ const names=new Map(employees.filter(e=>!e.archived).map(e=>[e.id,e.name])),limits=readLimits(),alerts=[];
+ for(const x of data){if(!names.has(x.employee_id))continue;const a=Math.max(start.getTime(),new Date(x.started_at).getTime()),b=Math.min(now.getTime(),x.ended_at?new Date(x.ended_at).getTime():now.getTime());const ms=b-a;if(ms>limits[x.kind]*60000){alerts.push({name:names.get(x.employee_id),kind:x.kind,minutes:Math.floor(ms/60000),limit:limits[x.kind],ongoing:!x.ended_at,start:x.started_at})}}
+ alerts.sort((a,b)=>(b.minutes-b.limit)-(a.minutes-a.limit));count.textContent=alerts.length+' сигналов';
+ if(!alerts.length){const p=document.createElement('p');p.className='attention-ok';p.textContent='За сегодня превышений установленных порогов не обнаружено.';root.append(p)}
+ for(const x of alerts){const line=document.createElement('div');line.className='attention-row';const left=document.createElement('div'),name=document.createElement('strong'),detail=document.createElement('small'),right=document.createElement('span');name.textContent=x.name;detail.textContent=(x.kind==='lunch'?'Обед':'Перерыв')+' · '+fmtTime(x.start)+(x.ongoing?' · продолжается':' · завершён');right.className='attention-min';right.textContent=x.minutes+' мин / лимит '+x.limit;left.append(name,detail);line.append(left,right);root.append(line)}
+ if(data.length===1000){const note=document.createElement('p');note.className='warn';note.textContent='Достигнут лимит 1000 интервалов: список отклонений может быть неполным.';root.append(note)}
+}
+let selectedProfileId=null,profilePeriod=7,profileRequest=0;
+$('closeProfile').onclick=()=>{$('employeeProfile').hidden=true;selectedProfileId=null};
+for(const days of [7,30])$('profile'+days).onclick=()=>{profilePeriod=days;for(const d of [7,30])$('profile'+d).classList.toggle('active',d===days);if(selectedProfileId)loadProfile()};
+function openProfile(id){selectedProfileId=id;profilePeriod=7;for(const d of [7,30])$('profile'+d).classList.toggle('active',d===7);$('employeeProfile').hidden=false;$('employeeProfile').scrollIntoView({behavior:'smooth',block:'start'});loadProfile()}
+async function loadProfile(){
+ const id=selectedProfileId;if(!id||!client)return;const token=++profileRequest;
+ const employee=knownEmployees.find(e=>e.id===id);if(!employee)return;
+ await loadSchedule(id,token);
+ $('profileName').textContent=employee.name;$('profileStatus').textContent=employee.archived?'Архивный сотрудник':'Активный сотрудник';
+ const kpis=$('profileKpis'),mix=$('profileMix'),alerts=$('profileAlerts'),daysRoot=$('profileDays'),history=$('profileHistory');
+ kpis.textContent='Загружаем карточку...';mix.replaceChildren();alerts.replaceChildren();daysRoot.replaceChildren();history.replaceChildren();
+ const end=new Date(),start=new Date(end.getFullYear(),end.getMonth(),end.getDate()-profilePeriod+1),limits=readLimits();
+ const {data,error}=await client.from('ett_intervals').select('kind,started_at,ended_at').eq('employee_id',id).lt('started_at',end.toISOString()).or('ended_at.is.null,ended_at.gt.'+start.toISOString()).order('started_at',{ascending:false}).limit(1000);
+ if(token!==profileRequest||id!==selectedProfileId)return;kpis.replaceChildren();
+ if(error){kpis.textContent='Ошибка карточки: '+error.message;return}
+ const totals={work:0,lunch:0,break:0,personal:0,business:0,unexplained:0};
+ const daily=new Map(),signals=[];
+ for(let i=0;i<profilePeriod;i++){const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i);daily.set(d.toLocaleDateString('sv-SE'),{work:0,other:0})}
+ for(const x of data){
+  const s=new Date(x.started_at).getTime(),e=Math.min(end.getTime(),x.ended_at?new Date(x.ended_at).getTime():end.getTime());
+  if(e<=s)continue;
+  const overlap=Math.max(0,e-Math.max(s,start.getTime()));totals[x.kind]+=overlap;
+  if((x.kind==='break'||x.kind==='lunch')&&overlap>limits[x.kind]*60000){signals.push({kind:x.kind,ms:overlap,start:x.started_at,ongoing:!x.ended_at})}
+  for(let t=new Date(Math.max(s,start.getTime()));t.getTime()<e;){
+   const next=new Date(t.getFullYear(),t.getMonth(),t.getDate()+1),stop=Math.min(e,next.getTime()),key=t.toLocaleDateString('sv-SE'),day=daily.get(key);
+   if(day){if(x.kind==='work')day.work+=stop-t.getTime();else day.other+=stop-t.getTime()}t=new Date(stop)
+  }
+ }
+ const other=Object.entries(totals).filter(([k])=>k!=='work'&&k!=='lunch'&&k!=='break').reduce((s,[,v])=>s+v,0);
+ kpis.append(makeMetric('Работа',durationLabel(totals.work)),makeMetric('Обед и перерывы',durationLabel(totals.lunch+totals.break)),makeMetric('Прочие активности',durationLabel(other)),makeMetric('Сигналов к проверке',String(signals.length)));
+ const total=Object.values(totals).reduce((a,b)=>a+b,0),bar=document.createElement('div');bar.className='mix-bar';
+ for(const [kind,ms] of Object.entries(totals)){if(!ms)continue;const seg=document.createElement('div');seg.style.width=(ms/total*100)+'%';seg.style.background=colors[kind];bar.append(seg)}
+ mix.append(bar);
+ for(const [kind,ms] of Object.entries(totals)){if(!ms)continue;const line=document.createElement('div');line.className='mix-line';const a=document.createElement('span'),b=document.createElement('strong');a.textContent=kinds[kind];b.textContent=durationLabel(ms);line.append(a,b);mix.append(line)}
+ if(!total)mix.textContent='За период нет зарегистрированной активности.';
+ if(!signals.length)alerts.textContent='Превышений порогов не найдено.';
+ for(const x of signals){const line=document.createElement('div');line.className='log';line.textContent=(kinds[x.kind]||x.kind)+' · '+durationLabel(x.ms)+' · '+fmtTime(x.start)+(x.ongoing?' · продолжается':'');alerts.append(line)}
+ for(const [date,v] of daily){const card=document.createElement('div');card.className='profile-day';const h=document.createElement('strong');h.textContent=new Date(date+'T12:00:00').toLocaleDateString('ru-RU',{day:'2-digit',month:'short'});const w=document.createElement('span');w.textContent='Работа: '+durationLabel(v.work);const o=document.createElement('span');o.textContent='Другое: '+durationLabel(v.other);const b=document.createElement('div');b.className='day-bar';const sum=v.work+v.other;for(const [value,color] of [[v.work,'#238657'],[v.other,'#f0b44a']]){if(!value)continue;const segment=document.createElement('i');segment.style.width=(value/sum*100)+'%';segment.style.background=color;b.append(segment)}card.append(h,w,o,b);daysRoot.append(card)}
+ for(const x of data.slice(0,40)){const line=document.createElement('div');line.className='log';line.textContent=(kinds[x.kind]||x.kind)+' · '+fmtTime(x.started_at)+' → '+(x.ended_at?fmtTime(x.ended_at):'идёт сейчас');history.append(line)}
+ if(!data.length)history.textContent='Интервалов за период нет.';
+ renderPlanFact(data,start,end);
+ if(data.length===1000){const note=document.createElement('p');note.className='warn';note.textContent='Достигнут лимит 1000 записей. Карточка может быть неполной.';history.prepend(note)}
+}
+const weekNames=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const localTimezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
+let profileSchedule=null,scheduleReady=false,companySchedule=null,individualSchedule=null;
+function defaultSchedule(){return Object.fromEntries(Array.from({length:7},(_,i)=>[String(i),{enabled:i>0&&i<6,start:'09:00',end:'18:00',break_minutes:60}]))}
+function clockMinutes(s){if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(s||''))return NaN;const [h,m]=s.split(':').map(Number);return h*60+m}
+function scheduledMinutes(day){if(!day?.enabled)return 0;const s=clockMinutes(day.start),e=clockMinutes(day.end),b=Number(day.break_minutes);return Number.isFinite(s)&&Number.isFinite(e)&&e>s&&Number.isFinite(b)&&b>=0&&b<e-s?e-s-b:0}
+function scheduleGrid(rootId,weekly){const root=$(rootId);root.replaceChildren();
+ for(let i=1;i<=7;i++){const d=i%7,x=weekly[String(d)]||defaultSchedule()[String(d)],box=document.createElement('div');box.className='schedule-day';
+  const heading=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.checked=!!x.enabled;check.dataset.day=d;check.dataset.field='enabled';heading.append(check,document.createTextNode(weekNames[d]));box.append(heading);
+  for(const [field,label,type] of [['start','Начало','time'],['end','Окончание','time'],['break_minutes','Перерыв, мин','number']]){const lbl=document.createElement('label');lbl.textContent=label;const input=document.createElement('input');input.type=type;input.dataset.day=d;input.dataset.field=field;input.value=x[field];if(type==='number'){input.min='0';input.max='600';input.step='1'}box.append(lbl,input)}
+  root.append(box)
+ }
+}
+function readScheduleGrid(rootId){const weekly=defaultSchedule();for(const input of $(rootId).querySelectorAll('input')){const d=input.dataset.day,f=input.dataset.field;weekly[d][f]=f==='enabled'?input.checked:f==='break_minutes'?Number(input.value):input.value}return weekly}
+function validateSchedule(weekly){for(const [d,x] of Object.entries(weekly)){if(!Number.isInteger(x.break_minutes)||x.break_minutes<0||x.break_minutes>600||!Number.isFinite(clockMinutes(x.start))||!Number.isFinite(clockMinutes(x.end))||(x.enabled&&scheduledMinutes(x)<=0))return 'Проверь '+weekNames[Number(d)]+': время окончания должно быть позже начала, а перерыв меньше смены.'}return ''}
+async function getCompanySchedule(){
+ const {data,error}=await client.from('ett_company_schedule').select('weekly,timezone').maybeSingle();
+ if(error)throw error;return {weekly:data?.weekly||defaultSchedule(),timezone:data?.timezone||localTimezone};
+}
+async function loadCompanyScheduleEditor(){
+ const root=$('companyScheduleGrid');root.textContent='Загружаем...';
+ try{companySchedule=await getCompanySchedule();scheduleGrid('companyScheduleGrid',companySchedule.weekly);
+ $('companyScheduleMessage').textContent=companySchedule.timezone!==localTimezone?'Сохранённый часовой пояс: '+companySchedule.timezone+'. Устройство: '+localTimezone+'.':'Часовой пояс: '+companySchedule.timezone}
+ catch(e){root.textContent='Не удалось загрузить общий график. Выполни database/004_company_schedule.sql. '+e.message}
+}
+$('saveCompanySchedule').onclick=async()=>{
+ const weekly=readScheduleGrid('companyScheduleGrid'),errorText=validateSchedule(weekly);if(errorText){$('companyScheduleMessage').textContent=errorText;return}
+ const {data:{user},error:authError}=await client.auth.getUser();if(authError||!user){$('companyScheduleMessage').textContent='Войди в аккаунт заново.';return}
+ const {error}=await client.from('ett_company_schedule').upsert({owner_id:user.id,weekly,timezone:localTimezone,updated_at:new Date().toISOString()},{onConflict:'owner_id'});
+ if(error){$('companyScheduleMessage').textContent='Ошибка сохранения: '+error.message;return}
+ companySchedule={weekly,timezone:localTimezone};$('companyScheduleMessage').textContent='Общий график сохранён в Supabase.';if(selectedProfileId)await loadProfile()
+};
+async function loadSchedule(id,token){
+ const root=$('scheduleGrid');root.textContent='Загружаем график...';$('scheduleMessage').textContent='';scheduleReady=false;
+ const [individual,company]=await Promise.all([client.from('ett_schedules').select('weekly,timezone').eq('employee_id',id).maybeSingle(),client.from('ett_company_schedule').select('weekly,timezone').maybeSingle()]);
+ if(token!==profileRequest||id!==selectedProfileId)return;
+ if(individual.error||company.error){root.textContent='Не удалось прочитать график. Проверь миграцию 004. '+(individual.error||company.error).message;profileSchedule=null;return}
+ companySchedule={weekly:company.data?.weekly||defaultSchedule(),timezone:company.data?.timezone||localTimezone};
+ individualSchedule=individual.data?{weekly:individual.data.weekly,timezone:individual.data.timezone}:null;
+ profileSchedule=individualSchedule||companySchedule;scheduleReady=true;
+ $('scheduleOverride').checked=!!individualSchedule;$('scheduleEditor').hidden=!individualSchedule;
+ $('scheduleSource').textContent=individualSchedule?'Индивидуальное исключение активно':'Применяется общий график компании';
+ scheduleGrid('scheduleGrid',profileSchedule.weekly);
+ if(profileSchedule.timezone!==localTimezone)$('scheduleMessage').textContent='Внимание: график в '+profileSchedule.timezone+', устройство в '+localTimezone+'. Сравнение план/факт будет отключено.';
+}
+$('scheduleOverride').onchange=async()=>{
+ if(!selectedProfileId||!scheduleReady)return;
+ const enabled=$('scheduleOverride').checked;
+ if(enabled){$('scheduleEditor').hidden=false;scheduleGrid('scheduleGrid',individualSchedule?.weekly||companySchedule.weekly);$('scheduleMessage').textContent='Настрой исключение и нажми «Сохранить индивидуальный график». Пока действует прежний график.';return}
+ if(!individualSchedule){$('scheduleEditor').hidden=true;$('scheduleMessage').textContent='Применяется общий график.';return}
+ if(!confirm('Удалить индивидуальное исключение? Для сотрудника начнёт действовать общий график компании.')){$('scheduleOverride').checked=true;return}
+ const {error}=await client.from('ett_schedules').delete().eq('employee_id',selectedProfileId);
+ if(error){$('scheduleOverride').checked=true;$('scheduleMessage').textContent='Ошибка: '+error.message;return}
+ individualSchedule=null;await loadProfile()
+};
+$('saveSchedule').onclick=async()=>{
+ if(!selectedProfileId||!scheduleReady)return;
+ const weekly=readScheduleGrid('scheduleGrid'),errorText=validateSchedule(weekly);if(errorText){$('scheduleMessage').textContent=errorText;return}
+ const {data:{user},error:authError}=await client.auth.getUser();if(authError||!user){$('scheduleMessage').textContent='Нужно войти заново.';return}
+ const {error}=await client.from('ett_schedules').upsert({employee_id:selectedProfileId,owner_id:user.id,weekly,timezone:localTimezone,updated_at:new Date().toISOString()},{onConflict:'employee_id'});
+ if(error){$('scheduleMessage').textContent='Ошибка сохранения: '+error.message;return}
+ await loadProfile();$('scheduleMessage').textContent='Индивидуальный график сохранён в Supabase.'
+};
+function renderPlanFact(rows,start,end){
+ const kpis=$('planFactKpis'),root=$('planFactDays');kpis.replaceChildren();root.replaceChildren();
+ if(!scheduleReady||!profileSchedule){root.textContent='График недоступен. Выполни SQL-миграцию и сохрани расписание.';return}
+ if(profileSchedule.timezone!==localTimezone){root.textContent='Часовые пояса графика и устройства различаются. Сравнение отключено, чтобы не показывать неверные отклонения.';return}
+ let planTotal=0,factTotal=0;const head=document.createElement('div');head.className='pf-row head';for(const t of ['Дата','План','Факт','Разница']){const span=document.createElement('span');span.textContent=t;head.append(span)}root.append(head);
+ for(let i=0;i<profilePeriod;i++){
+  const day=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i),next=new Date(day.getFullYear(),day.getMonth(),day.getDate()+1),cap=Math.min(next.getTime(),end.getTime()),schedule=profileSchedule.weekly[String(day.getDay())],plan=scheduledMinutes(schedule)*60000;
+  let fact=0;for(const x of rows){if(x.kind!=='work')continue;const a=Math.max(day.getTime(),new Date(x.started_at).getTime()),b=Math.min(cap,x.ended_at?new Date(x.ended_at).getTime():end.getTime());if(b>a)fact+=b-a}
+  // Текущий день не включаем в итоговый план/факт: смена ещё может продолжаться.
+  const complete=next.getTime()<=end.getTime();if(complete){planTotal+=plan;factTotal+=fact}
+  const row=document.createElement('div');row.className='pf-row';
+  const values=[day.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'}),durationLabel(plan),durationLabel(fact),complete?(fact>=plan?'+':'−')+durationLabel(Math.abs(fact-plan)):'В процессе'];
+  values.forEach((v,j)=>{const span=document.createElement('span');span.textContent=v;if(j===3&&complete)span.className=fact>=plan?'positive':'negative';row.append(span)});root.append(row)
+ }
+ kpis.append(makeMetric('План, завершённые дни',durationLabel(planTotal)),makeMetric('Факт, завершённые дни',durationLabel(factTotal)),makeMetric('Разница, завершённые дни',(factTotal>=planTotal?'+':'−')+durationLabel(Math.abs(factTotal-planTotal))));
+ if(!rows.length){const p=document.createElement('p');p.className='muted';p.textContent='За период нет зарегистрированных интервалов. Это не подтверждает отсутствие сотрудника.';root.append(p)}
+}
+function renderQuickActivity(employees,statuses){
+ const root=$('quickActivity');root.replaceChildren();
+ if(!employees.length){root.textContent='Добавь сотрудника в разделе «Команда».';return}
+ for(const emp of employees){
+  const active=statuses.get(emp.id),line=document.createElement('div');line.className='activity-person';
+  const head=document.createElement('div');head.className='activity-head';const name=document.createElement('strong');name.textContent=emp.name;
+  const badge=document.createElement('span');badge.className='activity-status';badge.dataset.kind=active?.kind||'stop';badge.textContent=active?(kinds[active.kind]||active.kind)+' · с '+new Date(active.started_at).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}):'Нет активного таймера';head.append(name,badge);line.append(head);
+  const buttons=document.createElement('div');buttons.className='activity-actions';
+  for(const [kind,label] of [...Object.entries(kinds),['stop','■ Стоп']]){
+   const button=document.createElement('button');button.type='button';button.dataset.kind=kind;button.textContent=label;button.classList.toggle('is-current',active?.kind===kind);
+   button.disabled=kind==='stop'&&!active;
+   button.setAttribute('aria-pressed',String(active?.kind===kind));
+   button.onclick=async()=>{for(const b of buttons.querySelectorAll('button'))b.disabled=true;await transition(emp.id,kind==='stop'?null:kind)};
+   buttons.append(button)
+  }
+  line.append(buttons);root.append(line)
+ }
+}
+$('refreshActivity').onclick=check;
+const pageNames={overview:'Обзор команды',team:'Команда',analytics:'Аналитика',journal:'Журнал',settings:'Настройки'};
+function navigate(page){for(const p of Object.keys(pageNames))$('page-'+p).hidden=p!==page;for(const b of document.querySelectorAll('.nav')){const active=b.dataset.page===page;b.classList.toggle('active',active);b.setAttribute('aria-current',active?'page':'false')}$('pageTitle').textContent=pageNames[page];if(page==='team'&&client)check();if(page==='settings'&&client)loadCompanyScheduleEditor();}
+for(const b of document.querySelectorAll('.nav'))b.addEventListener('click',()=>navigate(b.dataset.page));
+function makeMetric(label,value){const el=document.createElement('div');el.className='kpi';const s=document.createElement('span');s.textContent=label;const b=document.createElement('b');b.textContent=value;el.append(s,b);return el}
+async function loadOverview(employees){
+ const root=$('overviewKpis'),people=$('overviewPeople'),mix=$('overviewMix');
+ root.replaceChildren();people.replaceChildren();mix.replaceChildren();
+ const active=employees.filter(x=>!x.archived),ids=active.map(x=>x.id);
+ const [dayStart,dayEnd]=bounds(dayInput.value);
+ const [openResult,dayResult]=await Promise.all([
+  client.from('ett_intervals').select('employee_id,kind,started_at').is('ended_at',null),
+  client.from('ett_intervals').select('employee_id,kind,started_at,ended_at').lt('started_at',dayEnd.toISOString()).or('ended_at.is.null,ended_at.gt.'+dayStart.toISOString()).limit(1000)
+ ]);
+ if(openResult.error||dayResult.error){$('quickActivity').replaceChildren();people.textContent='Не удалось загрузить сводку: '+(openResult.error||dayResult.error).message;return}
+ const statuses=new Map(openResult.data.map(x=>[x.employee_id,x]));
+ renderQuickActivity(active, statuses);
+ const counts={work:0,other:0,idle:0};
+ for(const e of active){const k=statuses.get(e.id)?.kind;if(k==='work')counts.work++;else if(k)counts.other++;else counts.idle++}
+ root.append(makeMetric('Сотрудников в команде',String(active.length)),makeMetric('Работают сейчас',String(counts.work)),makeMetric('Другие активности',String(counts.other)),makeMetric('Без активного таймера',String(counts.idle)));
+ for(const e of active){const st=statuses.get(e.id),line=document.createElement('div');line.className='person-line';const name=document.createElement('strong');name.textContent=e.name;const pill=document.createElement('span');pill.className='pill';pill.textContent=st?(kinds[st.kind]||st.kind)+' · '+new Date(st.started_at).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}):'Нет активного таймера';line.append(name,pill);people.append(line)}
+ if(!active.length)people.textContent='Пока нет активных сотрудников.';
+ const totals=Object.fromEntries(Object.keys(kinds).map(k=>[k,0]));const now=Date.now();
+ for(const x of dayResult.data){if(!ids.includes(x.employee_id))continue;const a=Math.max(dayStart.getTime(),new Date(x.started_at).getTime()),b=Math.min(dayEnd.getTime(),x.ended_at?new Date(x.ended_at).getTime():now,now);if(b>a)totals[x.kind]+=b-a}
+ const total=Object.values(totals).reduce((a,b)=>a+b,0);
+ const bar=document.createElement('div');bar.className='mix-bar';for(const [kind,ms] of Object.entries(totals)){if(!ms)continue;const segment=document.createElement('div');segment.style.width=(ms/total*100)+'%';segment.style.background=colors[kind];bar.append(segment)}mix.append(bar);
+ for(const [kind,ms] of Object.entries(totals)){if(!ms)continue;const line=document.createElement('div');line.className='mix-line';const name=document.createElement('span');name.textContent=kinds[kind];const value=document.createElement('strong');value.textContent=durationLabel(ms);line.append(name,value);mix.append(line)}
+ if(!total){const empty=document.createElement('p');empty.className='muted';empty.textContent='Сегодня ещё нет зарегистрированных интервалов.';mix.append(empty)}
+ if(dayResult.data.length===1000){const note=document.createElement('p');note.className='warn';note.textContent='Сводка ограничена первыми 1000 интервалами.';mix.append(note)}
+}
+
+const clearActivityDialog=$('clearActivityDialog'),clearActivityWord=$('clearActivityWord');
+const clearActivityStart=$('clearActivityStart'),clearActivitySubmit=$('clearActivitySubmit');
+const clearActivityCount=$('clearActivityCount'),clearActivityStatus=$('clearActivityStatus');
+const clearActivityCancel=$('clearActivityCancel'),clearActivityContinue=$('clearActivityContinue');
+const activityConfirmation='ОЧИСТИТЬ';
+let activityPreview=null, clearingActivity=false;
+
+clearActivityStart.onclick=async()=>{
+ if(!client||clearActivityDialog.open)return;
+ if(busy){clearActivityStatus.textContent='Дождитесь сохранения статуса таймера.';return;}
+ activityPreview=null;
+ clearActivityStatus.textContent='';
+ clearActivityCount.textContent='Считаем записи за всё время…';
+ $('clearActivityWarning').hidden=true;
+ $('clearActivityConfirm').hidden=true;
+ clearActivityContinue.hidden=true;
+ clearActivitySubmit.hidden=true;
+ clearActivitySubmit.disabled=true;
+ clearActivityWord.value='';
+ clearActivityStart.disabled=true;
+ clearActivityDialog.showModal();
+ const connection=client;
+ // The request marker prevents a cancelled preview from updating a reopened dialog.
+ const preview={};
+ activityPreview=preview;
+ try{
+  const {data,error:authError}=await connection.auth.getUser();
+  if(authError||!data?.user)throw Error('Войдите в аккаунт заново.');
+  const owner=data.user.id;
+  const {count,error}=await connection.from('ett_intervals')
+   .select('id',{count:'exact',head:true}).eq('owner_id',owner);
+  if(error)throw error;
+  if(!Number.isSafeInteger(count)||count<0)throw Error('Сервер не вернул количество записей.');
+  if(activityPreview!==preview)return;
+  Object.assign(preview,{connection,owner,count});
+  clearActivityCount.textContent=count===0?'История уже пуста.':'Записей к удалению: '+count.toLocaleString('ru-RU')+'.';
+  $('clearActivityWarning').hidden=count===0;
+  clearActivityContinue.hidden=count===0;
+ }catch(error){
+  if(activityPreview===preview)clearActivityCount.textContent='Не удалось посчитать записи. '+error.message;
+ }
+};
+clearActivityContinue.onclick=()=>{
+ clearActivityContinue.hidden=true;
+ $('clearActivityConfirm').hidden=false;
+ clearActivitySubmit.hidden=false;
+ clearActivityWord.focus();
+};
+clearActivityWord.oninput=()=>{
+ clearActivitySubmit.disabled=clearingActivity||clearActivityWord.value!==activityConfirmation;
+};
+clearActivityCancel.onclick=()=>{if(!clearingActivity)clearActivityDialog.close();};
+clearActivityDialog.oncancel=event=>{if(clearingActivity)event.preventDefault();};
+clearActivityDialog.onclose=()=>{
+ if(clearActivityDialog.open)return;
+ activityPreview=null;
+ clearActivityStart.disabled=false;
+ clearActivityStart.focus();
+};
+clearActivitySubmit.onclick=async()=>{
+ const preview=activityPreview;
+ if(!clearActivityDialog.open||clearActivitySubmit.hidden||clearingActivity||!preview?.count||
+    preview.connection!==client||clearActivityWord.value!==activityConfirmation)return;
+
+ clearingActivity=true;
+ clearActivityCancel.disabled=true;
+ clearActivitySubmit.disabled=true;
+ clearActivityWord.disabled=true;
+ clearActivitySubmit.textContent='Удаляем…';
+ try{
+  const {data,error}=await preview.connection.rpc('ett_clear_activity',{
+   p_confirmation:clearActivityWord.value,
+   p_expected_count:preview.count,
+   p_confirmed_owner:preview.owner
+  });
+  if(error)throw error;
+  clearActivityStatus.textContent='История очищена. Удалено записей: '+Number(data).toLocaleString('ru-RU')+'.';
+  await check();
+ }catch(error){
+  if(error.code==='PT409'){
+   clearActivityStatus.textContent='Количество записей изменилось. Откройте очистку снова для пересчёта.';
+  }else if(error.code==='PGRST202'||error.code==='42883'){
+   clearActivityStatus.textContent='Очистка станет доступна после установки миграции 005_clear_activity.sql в Supabase.';
+  }else{
+   clearActivityStatus.textContent='Сервер не подтвердил очистку. Перед повтором проверьте количество записей. '+error.message;
+   await check();
+  }
+ }finally{
+  clearingActivity=false;
+  clearActivityCancel.disabled=false;
+  clearActivityWord.disabled=false;
+  clearActivitySubmit.textContent='Удалить записи';
+  clearActivityDialog.close();
+ }
+};
+
+$('refreshlog').onclick=loadJournal;
+$('test').onclick=check;$('refreshTeam').onclick=check;$('signout').onclick=async()=>{if(client)await client.auth.signOut();show('login');$('password').value='';status('Выход выполнен.')};
+</script></body></html>
